@@ -5,7 +5,7 @@ function Get-DiaDeSorte {
     )
     
     $Dezenas = 1..31
-    $Mes = 'Janeiro','Fevereiro','MarÃ§o','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'
+    $Mes = 'Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'
     
     1..$numTickets | ForEach-Object {
         $numeros = ($Dezenas | Get-Random -Count $numDezenas | Sort-Object) -join ','
