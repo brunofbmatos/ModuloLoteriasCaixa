@@ -22,6 +22,14 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 ### Added
 - Módulo de integração com API da Caixa.
 - Funções para busca de resultados das principais loterias:
+  - `Get-ResultadoMegaSena`
+  - `Get-ResultadoLotoFacil`
+  - `Get-ResultadoQuina`
+  - `Get-ResultadoLotomania`
+  - `Get-ResultadoDuplaSena`
+  - `Get-ResultadoDiaDeSorte`
+  - `Get-ResultadoSuperSete`
+  - `Get-ResultadoMaisMilionaria`
 ### Changed
 - Melhorias no desempenho geral da aplicação.
 

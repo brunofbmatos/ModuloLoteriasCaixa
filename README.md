@@ -464,3 +464,21 @@ Faixa: 5 acertos, Ganhadores: 23, Prêmio: R$ 1074.4
 Faixa: 4 acertos, Ganhadores: 363, Prêmio: R$ 68.07
 Faixa: 3 acertos, Ganhadores: 3415, Prêmio: R$ 5.0
 ```
+***
+# Future 
+### Planned 
+
+| Tarefa | Descrição | Status |
+|--------|------------|--------|
+| Unificação das funções `Get-MegaSena` e `Get-ResultadoMegaSena` | - Sem parâmetros, retornará o resultado do último concurso. <br> - Com um parâmetro (número do concurso), retornará o resultado do concurso informado. <br> - Com dois parâmetros, retornará os jogos gerados. | A Fazer |
+| Unificação das funções `Get-DiaDeSorte` e `Get-ResultadoDiaDeSorte` | - Sem parâmetros, retornará o resultado do último concurso. <br> - Com um parâmetro (número do concurso), retornará o resultado do concurso informado. <br> - Com dois parâmetros, retornará os jogos gerados. | A Fazer |
+| Unificação das funções `Get-LotoFacil` e `Get-ResultadoLotoFacil` | - Sem parâmetros, retornará o resultado do último concurso. <br> - Com um parâmetro (número do concurso), retornará o resultado do concurso informado. <br> - Com dois parâmetros, retornará os jogos gerados. | A Fazer |
+| Unificação das funções `Get-Quina` e `Get-ResultadoQuina` | - Sem parâmetros, retornará o resultado do último concurso. <br> - Com um parâmetro (número do concurso), retornará o resultado do concurso informado. <br> - Com dois parâmetros, retornará os jogos gerados. | A Fazer |
+| Unificação das funções `Get-Lotomania` e `Get-ResultadoLotomania` | - Sem parâmetros, retornará o resultado do último concurso. <br> - Com um parâmetro (número do concurso), retornará o resultado do concurso informado. <br> - Com dois parâmetros, sendo que o primeiro é zero e o segundo o número de jogos, retornará os jogos gerados. | A Fazer |
+| Unificação das funções `Get-SuperSete` e `Get-ResultadoSuperSete` | - Sem parâmetros, retornará o resultado do último concurso. <br> - Com um parâmetro (número do concurso), retornará o resultado do concurso informado. <br> - Com dois parâmetros, retornará os jogos gerados. | A Fazer |
+| Unificação das funções `Get-Milionaria` e `Get-ResultadoMaisMilionaria` | - Sem parâmetros, retornará o resultado do último concurso. <br> - Com um parâmetro (número do concurso), retornará o resultado do concurso informado. <br> - Com três parâmetros, retornará os jogos gerados. | A Fazer |
+| Unificação das funções `Get-DuplaSena` e `Get-ResultadoDuplaSena` | - Sem parâmetros, retornará o resultado do último concurso. <br> - Com um parâmetro (número do concurso), retornará o resultado do concurso informado. <br> - Com dois parâmetros, retornará os jogos gerados. | A Fazer |
+| Criar função para obter resultados de jogos da loteria Timemania da Caixa | Desenvolver função para obter resultados da loteria Timemania | A Fazer |
+| Criar função para obter resultados de jogos da loteria Federal da Caixa | Desenvolver função para obter resultados da loteria Federal | A Fazer |
+| Criar função para obter resultados de jogos da loteria Loteca da Caixa | Desenvolver função para obter resultados da loteria Loteca | A Fazer |
+
