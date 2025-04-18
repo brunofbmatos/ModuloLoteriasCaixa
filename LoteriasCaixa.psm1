@@ -515,7 +515,91 @@ function DiaDeSorte {
     }
 }
 
+function SuperSete {
+    param (
+        [Parameter(Mandatory=$false)][int]$param1 = 0,
+        [Parameter(Mandatory=$false)][int]$param2 = 0
+    )
 
+    if ($param1 -eq 0 -and $param2 -eq 0) {
+        try {
+            $url = "https://servicebus2.caixa.gov.br/portaldeloterias/api/SuperSete/"
+            $response = Invoke-RestMethod -Uri $url -Method Get
+
+            if ($response) {
+                $concurso = $response.numero
+                $tipojogo = $response.tipoJogo
+                $dataApuracao = $response.dataApuracao
+                $listaDezenas = $response.listaDezenas -join ", "
+                $listaRateioPremio = $response.listaRateioPremio
+                $acumulou = $response.acumulado
+                if ($acumulou -eq 1) {
+                    $acumulou = "sim"
+                } else {
+                    $acumulou = "nao"
+                }
+
+                Write-Output "Concurso: $concurso"
+                Write-Output "Tipo Jogo: $tipojogo"
+                Write-Output "Data de Apuração: $dataApuracao"
+                Write-Output "Dezenas Sorteadas: $listaDezenas"
+                Write-Output "Acumulou: $acumulou"
+                Write-Output "Rateio de Prêmios:"
+                $listaRateioPremio | ForEach-Object {
+                    Write-Output "Faixa: $($_.descricaoFaixa), Ganhadores: $($_.numeroDeGanhadores), Prêmio: R$ $($_.valorPremio)"
+                }
+            } else {
+                Write-Output "Não foi possível obter os dados da API."
+            }
+        } catch {
+            Write-Output "Erro ao acessar a API: $url"
+        }
+    } elseif ($param1 -ne 0 -and $param2 -eq 0) {
+        try {
+            $url = "https://servicebus2.caixa.gov.br/portaldeloterias/api/SuperSete/" + $param1
+            $response = Invoke-RestMethod -Uri $url -Method Get
+
+            if ($response) {
+                $concurso = $response.numero
+                $tipojogo = $response.tipoJogo
+                $dataApuracao = $response.dataApuracao
+                $listaDezenas = $response.listaDezenas -join ", "
+                $listaRateioPremio = $response.listaRateioPremio
+                $acumulou = $response.acumulado
+                if ($acumulou -eq 1) {
+                    $acumulou = "sim"
+                } else {
+                    $acumulou = "nao"
+                }
+
+                Write-Output "Concurso: $concurso"
+                Write-Output "Tipo Jogo: $tipojogo"
+                Write-Output "Data de Apuração: $dataApuracao"
+                Write-Output "Dezenas Sorteadas: $listaDezenas"
+                Write-Output "Acumulou: $acumulou"
+                Write-Output "Rateio de Prêmios:"
+                $listaRateioPremio | ForEach-Object {
+                    Write-Output "Faixa: $($_.descricaoFaixa), Ganhadores: $($_.numeroDeGanhadores), Prêmio: R$ $($_.valorPremio)"
+                }
+            } else {
+                Write-Output "Não foi possível obter os dados da API."
+            }
+        } catch {
+            Write-Output "Erro ao acessar a API: $url"
+        }
+    } elseif ($param1 -ne 0 -and $param2 -ne 0) {
+        if ($param2 -lt 7 -or $param2 -gt 21) {
+            Write-Output "Erro: param2 deve estar entre 7 e 21."
+            return
+        }
+        try {
+            $numeros = 0..9
+            1..$param1 | ForEach-Object { -join (1..7 | ForEach-Object { $numeros | Get-Random })}
+        } catch {
+            Write-Output "Erro ao gerar os jogos: $_"
+        }
+    }
+}
 
 
 
@@ -527,18 +611,6 @@ function Get-Milionaria {
 	$Dezenas =  1..50; 
 	$Trevos = 1..6;  
     1..$numTickets |ForEach-Object {($Dezenas | Get-Random -Count $numDezenas | Sort-Object) + ' ; ' + ($Trevos| Get-Random -Count $numTrevos | Sort-Object) -join ',' }
-}
-
-function Get-SuperSete {
-    param (
-        [Parameter(Mandatory=$true)][int]$numTickets,
-        [Parameter(Mandatory=$true)][int]$numDezenas
-    )
-
-    $numeros = 0..9
-    1..$numTickets | ForEach-Object {
-        -join (1..$numDezenas | ForEach-Object { $numeros | Get-Random })
-    }
 }
 
 function Get-ResultadoMaisMilionaria {
@@ -584,54 +656,5 @@ function Get-ResultadoMaisMilionaria {
         }
     } else {
         Write-Output "Não foi possível obter os dados da API."
-    }
-}
-
-function Get-ResultadoSuperSete {
-    param (
-        [Parameter(Mandatory=$false)][int]$concurso = 0
-    )
-
-    # Definindo a URL com base no número do sorteio
-    if ($concurso -eq 0) {
-        $url = "https://servicebus2.caixa.gov.br/portaldeloterias/api/SuperSete/"
-    } else {
-        $url = "https://servicebus2.caixa.gov.br/portaldeloterias/api/SuperSete/" + $concurso
-    }
-
-    try {
-        # Fazendo a requisição para a API
-        $response = Invoke-RestMethod -Uri $url -Method Get
-
-        # Verificando se a resposta contém dados
-        if ($response) {
-            # Extraindo os dados desejados
-            $concurso = $response.numero
-            $tipojogo = $response.tipoJogo
-            $dataApuracao = $response.dataApuracao
-            $listaDezenas = $response.listaDezenas -join ", "
-            $listaRateioPremio = $response.listaRateioPremio
-            $acumulou = $response.acumulado 
-            if($acumulou -eq 1){
-              $acumulou = "sim"
-            } else {
-                $acumulou = "nao"
-            }
-
-            # Exibindo os dados
-            Write-Output "Concurso: $concurso"
-            Write-Output "Tipo Jogo: $tipojogo"
-            Write-Output "Data de Apuração: $dataApuracao"
-            Write-Output "Dezenas Sorteadas: $listaDezenas"
-            Write-Output "Acumulou: $acumulou"
-            Write-Output "Rateio de Prêmios:"
-            $listaRateioPremio | ForEach-Object {
-                Write-Output "Faixa: $($_.descricaoFaixa), Ganhadores: $($_.numeroDeGanhadores), Prêmio: R$ $($_.valorPremio)"
-            }
-        } else {
-            Write-Output "Não foi possível obter os dados da API."
-        }
-    } catch {
-        Write-Output "Erro ao acessar a API: $_"
     }
 }
