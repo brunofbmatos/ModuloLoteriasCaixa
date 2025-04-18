@@ -427,24 +427,97 @@ function DuplaSena {
     }
 }
 
-
-
-
-function Get-DiaDeSorte {
+function DiaDeSorte {
     param (
-        [Parameter(Mandatory=$true)][int]$numTickets,
-        [Parameter(Mandatory=$true)][int]$numDezenas
+        [Parameter(Mandatory=$false)][int]$param1 = 0,
+        [Parameter(Mandatory=$false)][int]$param2 = 0
     )
-    
-    $Dezenas = 1..31
-    $Mes = 'Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'
-    
-    1..$numTickets | ForEach-Object {
-        $numeros = ($Dezenas | Get-Random -Count $numDezenas | Sort-Object) -join ','
-        $mes = $Mes | Get-Random -Count 1
-        "$numeros $mes"
+
+    if ($param1 -eq 0 -and $param2 -eq 0) {
+        try {
+            $url = "https://servicebus2.caixa.gov.br/portaldeloterias/api/diadesorte/"
+            $response = Invoke-RestMethod -Uri $url -Method Get
+
+            if ($response) {
+                $concurso = $response.numero
+                $tipojogo = $response.tipoJogo
+                $dataApuracao = $response.dataApuracao
+                $listaDezenas = $response.listaDezenas -join ", "
+                $messorte = $response.nomeTimeCoracaoMesSorte
+                $listaRateioPremio = $response.listaRateioPremio
+                $acumulou = if ($response.acumulado -eq 1) {"sim"} else {"nao"}
+
+                Write-Output "Concurso: $concurso"
+                Write-Output "Tipo Jogo: $tipojogo"
+                Write-Output "Data de Apuração: $dataApuracao"
+                Write-Output "Dezenas Sorteadas: $listaDezenas"
+                Write-Output "Mês da Sorte: $messorte"
+                Write-Output "Acumulou: $acumulou"
+                Write-Output "Rateio de Prêmios:"
+                $listaRateioPremio | ForEach-Object {
+                    Write-Output "Faixa: $($_.descricaoFaixa), Ganhadores: $($_.numeroDeGanhadores), Prêmio: R$ $($_.valorPremio)"
+                }
+            } else {
+                Write-Output "Não foi possível obter os dados da API."
+            }
+        } catch {
+            Write-Output "Erro ao acessar a API: $url"
+        }
+    } elseif ($param1 -ne 0 -and $param2 -eq 0) {
+        try {
+            $url = "https://servicebus2.caixa.gov.br/portaldeloterias/api/diadesorte/$param1"
+            $response = Invoke-RestMethod -Uri $url -Method Get
+
+            if ($response) {
+                $concurso = $response.numero
+                $tipojogo = $response.tipoJogo
+                $dataApuracao = $response.dataApuracao
+                $listaDezenas = $response.listaDezenas -join ", "
+                $messorte = $response.nomeTimeCoracaoMesSorte
+                $listaRateioPremio = $response.listaRateioPremio
+                $acumulou = if ($response.acumulado -eq 1) {"sim"} else {"nao"}
+
+                Write-Output "Concurso: $concurso"
+                Write-Output "Tipo Jogo: $tipojogo"
+                Write-Output "Data de Apuração: $dataApuracao"
+                Write-Output "Dezenas Sorteadas: $listaDezenas"
+                Write-Output "Mês da Sorte: $messorte"
+                Write-Output "Acumulou: $acumulou"
+                Write-Output "Rateio de Prêmios:"
+                $listaRateioPremio | ForEach-Object {
+                    Write-Output "Faixa: $($_.descricaoFaixa), Ganhadores: $($_.numeroDeGanhadores), Prêmio: R$ $($_.valorPremio)"
+                }
+            } else {
+                Write-Output "Não foi possível obter os dados da API."
+            }
+        } catch {
+            Write-Output "Erro ao acessar a API: $url"
+        }
+    } elseif ($param1 -ne 0 -and $param2 -ne 0) {
+        if ($param2 -lt 7 -or $param2 -gt 15) {
+            Write-Output "Erro: param2 deve estar entre 7 e 15."
+            return
+        }
+        try {
+            $Dezenas = 1..31
+            $Meses = @("Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro")
+
+            1..$param1 | ForEach-Object {
+                $numeros = ($Dezenas | Get-Random -Count $param2 | Sort-Object) -join ", "
+                $mes = $Meses | Get-Random
+                Write-Output "$numeros - Mês da Sorte: $mes"
+            }
+        } catch {
+            Write-Output "Erro ao gerar os jogos: $_"
+        }
+    } else {
+        Write-Output "Erro: Parâmetros inválidos."
     }
 }
+
+
+
+
 
 function Get-Milionaria {
     param (
@@ -550,57 +623,6 @@ function Get-ResultadoSuperSete {
             Write-Output "Tipo Jogo: $tipojogo"
             Write-Output "Data de Apuração: $dataApuracao"
             Write-Output "Dezenas Sorteadas: $listaDezenas"
-            Write-Output "Acumulou: $acumulou"
-            Write-Output "Rateio de Prêmios:"
-            $listaRateioPremio | ForEach-Object {
-                Write-Output "Faixa: $($_.descricaoFaixa), Ganhadores: $($_.numeroDeGanhadores), Prêmio: R$ $($_.valorPremio)"
-            }
-        } else {
-            Write-Output "Não foi possível obter os dados da API."
-        }
-    } catch {
-        Write-Output "Erro ao acessar a API: $_"
-    }
-}
-
-function Get-ResultadoDiaDeSorte {
-    param (
-        [Parameter(Mandatory=$false)][int]$concurso = 0
-    )
-
-    # Definindo a URL com base no número do sorteio
-    if ($concurso -eq 0) {
-        $url = "https://servicebus2.caixa.gov.br/portaldeloterias/api/DiaDeSorte/"
-    } else {
-        $url = "https://servicebus2.caixa.gov.br/portaldeloterias/api/DiaDeSorte/" + $concurso
-    }
-
-    try {
-        # Fazendo a requisição para a API
-        $response = Invoke-RestMethod -Uri $url -Method Get
-
-        # Verificando se a resposta contém dados
-        if ($response) {
-            # Extraindo os dados desejados
-            $concurso = $response.numero
-            $tipojogo = $response.tipoJogo
-            $dataApuracao = $response.dataApuracao
-            $listaDezenas = $response.listaDezenas -join ", "
-            $messorte = $response.nomeTimeCoracaoMesSorte 
-            $listaRateioPremio = $response.listaRateioPremio
-            $acumulou = $response.acumulado 
-            if($acumulou -eq 1){
-              $acumulou = "sim"
-            } else {
-                $acumulou = "nao"
-            }
-
-            # Exibindo os dados
-            Write-Output "Concurso: $concurso"
-            Write-Output "Tipo Jogo: $tipojogo"
-            Write-Output "Data de Apuração: $dataApuracao"
-            Write-Output "Dezenas Sorteadas 1º sorteio: $listaDezenas"
-            Write-Output "Mês da Sorte: $messorte"
             Write-Output "Acumulou: $acumulou"
             Write-Output "Rateio de Prêmios:"
             $listaRateioPremio | ForEach-Object {
