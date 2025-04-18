@@ -669,6 +669,14 @@ function MaisMilionaria {
             Write-Output "Erro ao acessar a API: $url"
         }
     } elseif ($param1 -ne 0 -and $param2 -ne 0 -and $param3 -ne 0) {
+        if ($param2 -lt 6 -or $param2 -gt 12) {
+            Write-Output "Erro: param2 deve estar entre 6 e 12."
+            return
+        }
+        if ($param3 -lt 1 -or $param3 -gt 6) {
+            Write-Output "Erro: param3 deve estar entre 1 e 6."
+            return
+        }
         try {
             $Dezenas = 1..50
             $Trevos = 1..6
