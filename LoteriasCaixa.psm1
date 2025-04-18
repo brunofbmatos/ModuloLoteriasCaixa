@@ -601,60 +601,87 @@ function SuperSete {
     }
 }
 
-
-
-function Get-Milionaria {
+function MaisMilionaria {
     param (
-        [Parameter(Mandatory=$true)][int]$numTickets, 
-        [Parameter(Mandatory=$true)][int]$numDezenas,
-        [Parameter(Mandatory=$true)][int]$numTrevos)
-	$Dezenas =  1..50; 
-	$Trevos = 1..6;  
-    1..$numTickets |ForEach-Object {($Dezenas | Get-Random -Count $numDezenas | Sort-Object) + ' ; ' + ($Trevos| Get-Random -Count $numTrevos | Sort-Object) -join ',' }
-}
-
-function Get-ResultadoMaisMilionaria {
-    param (
-        [Parameter(Mandatory=$false)][int]$concurso = 0
+        [Parameter(Mandatory=$false)][int]$param1 = 0,
+        [Parameter(Mandatory=$false)][int]$param2 = 0,
+        [Parameter(Mandatory=$false)][int]$param3 = 0
     )
 
-    if ($concurso -eq 0) {
-        $url = "https://servicebus2.caixa.gov.br/portaldeloterias/api/MaisMilionaria/"
-    } else {
-        $url = "https://servicebus2.caixa.gov.br/portaldeloterias/api/MaisMilionaria/" + $concurso
-    }
+    if ($param1 -eq 0 -and $param2 -eq 0 -and $param3 -eq 0) {
+        try {
+            $url = "https://servicebus2.caixa.gov.br/portaldeloterias/api/maismilionaria/"
+            $response = Invoke-RestMethod -Uri $url -Method Get
 
-    # Fazendo a requisição para a API
-    $response = Invoke-RestMethod -Uri $url -Method Get
+            if ($response) {
+                $concurso = $response.numero
+                $tipojogo = $response.tipoJogo
+                $dataApuracao = $response.dataApuracao
+                $listaDezenas = $response.listaDezenas -join ", "
+                $trevos = $response.trevosSorteados -join ", "
+                $listaRateioPremio = $response.listaRateioPremio
+                $acumulou = if ($response.acumulado -eq 1) {"sim"} else {"nao"}
 
-    # Verificando se a resposta contém dados
-    if ($response) {
-        # Extraindo os dados desejados
-        $concurso = $response.numero
-        $tipojogo = $response.tipoJogo
-        $dataApuracao = $response.dataApuracao
-        $listaDezenas = $response.listaDezenas -join ", "
-        $listaRateioPremio = $response.listaRateioPremio
-        $trevos = $response.trevosSorteados
-        $acumulou = $response.acumulado 
-            if($acumulou -eq 1){
-              $acumulou = "sim"
+                Write-Output "Concurso: $concurso"
+                Write-Output "Tipo Jogo: $tipojogo"
+                Write-Output "Data de Apuração: $dataApuracao"
+                Write-Output "Dezenas Sorteadas: $listaDezenas"
+                Write-Output "Trevos Sorteados: $trevos"
+                Write-Output "Acumulou: $acumulou"
+                Write-Output "Rateio de Prêmios:"
+                $listaRateioPremio | ForEach-Object {
+                    Write-Output "Faixa: $($_.descricaoFaixa), Ganhadores: $($_.numeroDeGanhadores), Prêmio: R$ $($_.valorPremio)"
+                }
             } else {
-                $acumulou = "nao"
+                Write-Output "Não foi possível obter os dados da API."
             }
+        } catch {
+            Write-Output "Erro ao acessar a API: $url"
+        }
+    } elseif ($param1 -ne 0 -and $param2 -eq 0 -and $param3 -eq 0) {
+        try {
+            $url = "https://servicebus2.caixa.gov.br/portaldeloterias/api/maismilionaria/$param1"
+            $response = Invoke-RestMethod -Uri $url -Method Get
 
-        # Exibindo os dados
-        Write-Output "Concurso: $concurso"
-        Write-Output "Tipo Jogo: $tipojogo"
-        Write-Output "Data de Apuração: $dataApuracao"
-        Write-Output "Dezenas Sorteadas: $listaDezenas"
-        Write-Output "Trevos Sorteados: $trevos"
-        Write-Output "Acumulou: $acumulou"
-        Write-Output "Rateio de Prêmios:"
-        $listaRateioPremio | ForEach-Object {
-            Write-Output "Faixa: $($_.descricaoFaixa), Ganhadores: $($_.numeroDeGanhadores), Prêmio: R$ $($_.valorPremio)"
+            if ($response) {
+                $concurso = $response.numero
+                $tipojogo = $response.tipoJogo
+                $dataApuracao = $response.dataApuracao
+                $listaDezenas = $response.listaDezenas -join ", "
+                $trevos = $response.trevosSorteados -join ", "
+                $listaRateioPremio = $response.listaRateioPremio
+                $acumulou = if ($response.acumulado -eq 1) {"sim"} else {"nao"}
+
+                Write-Output "Concurso: $concurso"
+                Write-Output "Tipo Jogo: $tipojogo"
+                Write-Output "Data de Apuração: $dataApuracao"
+                Write-Output "Dezenas Sorteadas: $listaDezenas"
+                Write-Output "Trevos Sorteados: $trevos"
+                Write-Output "Acumulou: $acumulou"
+                Write-Output "Rateio de Prêmios:"
+                $listaRateioPremio | ForEach-Object {
+                    Write-Output "Faixa: $($_.descricaoFaixa), Ganhadores: $($_.numeroDeGanhadores), Prêmio: R$ $($_.valorPremio)"
+                }
+            } else {
+                Write-Output "Não foi possível obter os dados da API."
+            }
+        } catch {
+            Write-Output "Erro ao acessar a API: $url"
+        }
+    } elseif ($param1 -ne 0 -and $param2 -ne 0 -and $param3 -ne 0) {
+        try {
+            $Dezenas = 1..50
+            $Trevos = 1..6
+
+            1..$param1 | ForEach-Object {
+                $numeros = ($Dezenas | Get-Random -Count $param2 | Sort-Object) -join ", "
+                $trevos = ($Trevos | Get-Random -Count $param3 | Sort-Object) -join ", "
+                Write-Output "$numeros ; Trevos: $trevos"
+            }
+        } catch {
+            Write-Output "Erro ao gerar os jogos: $_"
         }
     } else {
-        Write-Output "Não foi possível obter os dados da API."
+        Write-Output "Erro: Parâmetros inválidos."
     }
 }
