@@ -35,7 +35,6 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
 ### Fixed
 - Erro de conexão com a API da Caixa corrigido.
-- Problema de renderização no navegador Firefox resolvido.
 
 ## [1.0.0] - 2024-11-04 
 
@@ -51,3 +50,28 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
   - `Get-SuperSete`
   - `Get-Milionaria`
 - Documentação inicial.
+
+## [2.0.0] - 2025-04-18 
+
+### Added
+- Segunda versão estável lançada.
+- Atualização das funções para geração e busca de resultados das principais loterias :
+  - `MegaSena`
+  - `LotoFacil`
+  - `Quina`
+  - `Lotomania`
+  - `DuplaSena`
+  - `DiaDeSorte`
+  - `SuperSete`
+  - `Milionaria`
+
+## [2.0.1] - 2025-04-19 
+
+### Added
+- 2.0.1 versão estável lançada.
+- Funções para busca de resultados das loterias segundarias :
+  - `Timemania`
+  - `Federal`
+  - `Quina`
+  - `Loteca`
+  - Documentação atualizada parcialmente.

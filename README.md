@@ -7,14 +7,155 @@ Data | Versão | Descriçãp
 04/11/2024 | 1.0.0  | Funções criadas de geração de jogos
 21/12/2024 | 1.0.1  | Funções criadas sobre busca de resultados das loterias caixa
 21/12/2024 | 1.0.2  | Alteração da função Get-Lotomania para ter um só parâmetro pois são só 50 dezenas que pode ser escolhida.
+18/04/2025 | 2.0.0  | Atualização das funções para geração e busca de resultados das principais loterias.
+19/04/2025 | 2.0.1  | Funções para busca de resultados das loterias segundarias.
 ***
 Para importar :
 ```powershell
-Import-Module -Name "Caminho\Para\Seu\MeuModulo.psm1"
+Import-Module -Name "Caminho\LoteriasCaixa.psm1"
 ```
 ***
 # Funções :
 
+### `MegaSena`
+
+A função `MegaSena` permite que você gere jogos da e obtenha resultados de jogos da loteria MegaSena da Caixa. Ela aceita dois parâmetros que não são obrigatorios:
+- **Parâmetro 1: $param1 - Você escolhe o número do concurso que quer buscar ou define quantos jogos você deseja gerar.<br>
+ Obs.:Se não colocar nenhum número é buscado o ultimo concurso.<br>
+- **Parâmetro 2: $param2 - Define a quantidade de dezenas (números) que serão escolhidas para cada jogo.<br>
+ Obs.:São de 6 a 20 dezenas. <br>
+	-Se não colocar nenhum número é buscado o ultimo concurso.
+
+###  Sintaxe
+```powershell
+MegaSena $param1 <int> $param2 <int>
+```
+
+```powershell
+ps> MegaSena
+Concurso: 2809
+Tipo Jogo: MEGA_SENA
+Data de Apuração: 17/12/2024
+Dezenas Sorteadas: 02, 04, 15, 28, 34, 39
+Acumulou: sim
+Rateio de Prêmios:
+Faixa: 6 acertos, Ganhadores: 0, Prêmio: R$ 0.0
+Faixa: 5 acertos, Ganhadores: 39, Prêmio: R$ 60526.4
+Faixa: 4 acertos, Ganhadores: 5000, Prêmio: R$ 674.43
+```
+
+```powershell
+ps> MegaSena 2807
+Concurso: 2807
+Tipo Jogo: MEGA_SENA
+Data de Apuração: 12/12/2024
+Dezenas Sorteadas: 08, 25, 49, 52, 55, 56
+Acumulou: sim
+Rateio de Prêmios:
+Faixa: 6 acertos, Ganhadores: 0, Prêmio: R$ 0.0
+Faixa: 5 acertos, Ganhadores: 18, Prêmio: R$ 104535.16
+Faixa: 4 acertos, Ganhadores: 2025, Prêmio: R$ 1327.43
+```
+
+```powershell
+ps> MegaSena 1 6
+9,15,20,26,27,29
+```
+
+***
+### `LotoFacil`
+
+A função `LotoFacil` permite que você gere ou obtenha resultados dos jogos da loteria LotoFacil da Caixa. Ela aceita dois parâmetros principais:
+
+- **Parâmetro 1: $param1 - Define quantos jogos você deseja gerar.<br>
+Obs.: Se não colocar nenhum número é buscado o ultimo concurso.
+- **Parâmetro 2: $param2 - Você escolhe o número do concurso ou dDefine a quantidade de dezenas (números) que serão escolhidas para cada jogo.<br>
+Obs.: São de 15 a 20 dezenas. 
+
+###  Sintaxe
+```powershell
+LotoFacil $param1 <int> $param2 <int>
+```
+```powershell
+ps> LotoFacil
+Concurso: 3274
+Tipo Jogo: LOTOFACIL
+Data de Apuração: 20/12/2024
+Dezenas Sorteadas: 01, 02, 03, 04, 05, 07, 08, 11, 14, 16, 19, 20, 23, 24, 25
+Acumulou: nao
+Rateio de Prêmios:
+Faixa: 15 acertos, Ganhadores: 5, Prêmio: R$ 341631.81
+Faixa: 14 acertos, Ganhadores: 249, Prêmio: R$ 2054.86
+Faixa: 13 acertos, Ganhadores: 7950, Prêmio: R$ 30.0
+Faixa: 12 acertos, Ganhadores: 100791, Prêmio: R$ 12.0
+Faixa: 11 acertos, Ganhadores: 566687, Prêmio: R$ 6.0
+```
+
+```powershell
+ps> LotoFacil 3273
+Concurso: 3273
+Tipo Jogo: LOTOFACIL
+Data de Apuração: 19/12/2024
+Dezenas Sorteadas: 02, 04, 06, 07, 08, 10, 12, 15, 16, 17, 21, 22, 23, 24, 25
+Acumulou: nao
+Rateio de Prêmios:
+Faixa: 15 acertos, Ganhadores: 1, Prêmio: R$ 1640094.13
+Faixa: 14 acertos, Ganhadores: 175, Prêmio: R$ 1965.09
+Faixa: 13 acertos, Ganhadores: 7016, Prêmio: R$ 30.0
+Faixa: 12 acertos, Ganhadores: 91822, Prêmio: R$ 12.0
+Faixa: 11 acertos, Ganhadores: 506520, Prêmio: R$ 6.0
+```
+
+```powershell
+PS> LotoFacil 1 15
+2,3,4,5,6,7,8,9,10,16,19,20,22,23,25
+```
+***
+### `Quina`
+
+A função `Quina` permite que você obtenha resultados ou gere jogos da loteria Quina da Caixa. Ela aceita dois parâmetros principais que não são obrigatorios:
+
+- **Parâmetro 1: $param1 - escolhe o número do concurso que quer buscar ou define quantos jogos você deseja gerar.<br>
+Obs.: Se não colocar nenhum número é buscado o ultimo concurso.<br>
+- **Parâmetro 2: $param2 - Define a quantidade de dezenas (números) que serão escolhidas para cada jogo.<br>
+Obs.: São de 5 a 15 dezenas. 
+
+
+###  Sintaxe
+```powershell
+Get-Quina $param1 <int> $param2 <int>
+```
+```powershell
+ps> Quina 1 5
+12,26,32,40,44
+```
+```powershell
+ps> Quina
+Concurso: 6612
+Tipo Jogo: QUINA
+Data de Apuração: 20/12/2024
+Dezenas Sorteadas: 20, 22, 34, 38, 49
+Acumulou: nao
+Rateio de Prêmios:
+Faixa: 5 acertos, Ganhadores: 1, Prêmio: R$ 24904443.14
+Faixa: 4 acertos, Ganhadores: 122, Prêmio: R$ 8179.88
+Faixa: 3 acertos, Ganhadores: 9724, Prêmio: R$ 97.74
+Faixa: 2 acertos, Ganhadores: 243706, Prêmio: R$ 3.89
+```
+```powershell
+ps> Quina 6611
+Concurso: 6611
+Tipo Jogo: QUINA
+Data de Apuração: 19/12/2024
+Dezenas Sorteadas: 16, 18, 34, 41, 73
+Acumulou: sim
+Rateio de Prêmios:
+Faixa: 5 acertos, Ganhadores: 0, Prêmio: R$ 0.0
+Faixa: 4 acertos, Ganhadores: 86, Prêmio: R$ 10359.16
+Faixa: 3 acertos, Ganhadores: 7857, Prêmio: R$ 107.98
+Faixa: 2 acertos, Ganhadores: 204283, Prêmio: R$ 4.15
+```
+***
 ### `Get-DiaDeSorte`
 
 A função `Get-DiaDeSorte` permite que você gere jogos da loteria Dia de Sorte da Caixa. Ela aceita dois parâmetros principais:
@@ -50,23 +191,6 @@ ps> Get-DuplaSena 1 6
 16,17,20,32,35,47
 ```
 ***
-### `Get-LotoFacil`
-
-A função `Get-LotoFacil` permite que você gere jogos da loteria LotoFacil da Caixa. Ela aceita dois parâmetros principais:
-
-- **Parâmetro 1: $numTickets - Define quantos jogos você deseja gerar.
-- **Parâmetro 2: $numDezenas - Define a quantidade de dezenas (números) que serão escolhidas para cada jogo.<br>
-Obs.: São de 15 a 20 dezenas. 
-
-
-###  Sintaxe
-```powershell
-Get-LotoFacil $numTickets <int> $numDezenas <int>
-
-ps> Get-LotoFacil 1 15
-3,4,5,6,7,10,12,13,14,15,16,17,22,23,25
-```
-***
 ### `Get-Lotomania`
 
 A função `Get-Lotomania` permite que você gere jogos da loteria Lotomania da Caixa. Ela aceita um parâmetro principal:
@@ -79,23 +203,6 @@ Get-Lotomania $numTickets <int>
 
 ps> Get-Lotomania 1
 4,6,8,10,12,13,14,15,20,21,23,24,27,30,33,34,35,36,37,39,40,41,46,47,48,51,52,54,56,58,61,62,63,64,65,66,68,71,74,76,79,80,82,83,89,90,91,92,93,94
-```
-***
-### `Get-MegaSena`
-
-A função `Get-MegaSena` permite que você gere jogos da loteria Mega-Sena da Caixa. Ela aceita dois parâmetros principais:
-
-- **Parâmetro 1: $numTickets - Define quantos jogos você deseja gerar.
-- **Parâmetro 2: $numDezenas - Define a quantidade de dezenas (números) que serão escolhidas para cada jogo.<br>
-Obs.: São de 6 a 20 dezenas. 
-
-
-###  Sintaxe
-```powershell
-Get-MegaSena $numTickets <int> $numDezenas <int>
-
-ps> Get-MegaSena 1 6
-9,15,20,26,27,29
 ```
 ***
 ### `Get-Milionaria`
@@ -115,23 +222,6 @@ Get-Milionaria $numTickets <int> $numDezenas <int> $numTrevos <int>
 
 ps> Get-Milionaria 1 6 2
 6,21,31,39,40,50, ; ,3,5
-```
-***
-### `Get-Quina`
-
-A função `Get-Quina` permite que você gere jogos da loteria Quina da Caixa. Ela aceita dois parâmetros principais:
-
-- **Parâmetro 1: $numTickets - Define quantos jogos você deseja gerar.
-- **Parâmetro 2: $numDezenas - Define a quantidade de dezenas (números) que serão escolhidas para cada jogo.<br>
-Obs.: São de 5 a 15 dezenas. 
-
-
-###  Sintaxe
-```powershell
-Get-Quina $numTickets <int> $numDezenas <int>
-
-ps> Get-Quina 1 5
-12,26,32,40,44
 ```
 ***
 ### `Get-SuperSete`
@@ -235,43 +325,6 @@ Faixa: 4 acertos, Ganhadores: 430, Prêmio: R$ 119.0
 Faixa: 3 acertos, Ganhadores: 9451, Prêmio: R$ 2.7
 ```
 ***
-### `Get-ResultadoLotoFacil`
-
-A função `Get-ResultadoLotoFacil` permite que você obtenha resultados de jogos da loteria LotoFacil da Caixa. Ela aceita um parâmetro que não é obrigatorio:
-- **Parâmetro 1: $concurso - Você escolhe o número do concurso que quer buscar.<br>
-Obs.: Se não colocar nenhum número é buscado o ultimo concurso.
-
-###  Sintaxe
-```powershell
-Get-ResultadoLotoFacil $concurso <int>
-
-ps> Get-ResultadoLotoFacil
-Concurso: 3274
-Tipo Jogo: LOTOFACIL
-Data de Apuração: 20/12/2024
-Dezenas Sorteadas: 01, 02, 03, 04, 05, 07, 08, 11, 14, 16, 19, 20, 23, 24, 25
-Acumulou: nao
-Rateio de Prêmios:
-Faixa: 15 acertos, Ganhadores: 5, Prêmio: R$ 341631.81
-Faixa: 14 acertos, Ganhadores: 249, Prêmio: R$ 2054.86
-Faixa: 13 acertos, Ganhadores: 7950, Prêmio: R$ 30.0
-Faixa: 12 acertos, Ganhadores: 100791, Prêmio: R$ 12.0
-Faixa: 11 acertos, Ganhadores: 566687, Prêmio: R$ 6.0
-
-ps> Get-ResultadoLotoFacil 3273
-Concurso: 3273
-Tipo Jogo: LOTOFACIL
-Data de Apuração: 19/12/2024
-Dezenas Sorteadas: 02, 04, 06, 07, 08, 10, 12, 15, 16, 17, 21, 22, 23, 24, 25
-Acumulou: nao
-Rateio de Prêmios:
-Faixa: 15 acertos, Ganhadores: 1, Prêmio: R$ 1640094.13
-Faixa: 14 acertos, Ganhadores: 175, Prêmio: R$ 1965.09
-Faixa: 13 acertos, Ganhadores: 7016, Prêmio: R$ 30.0
-Faixa: 12 acertos, Ganhadores: 91822, Prêmio: R$ 12.0
-Faixa: 11 acertos, Ganhadores: 506520, Prêmio: R$ 6.0
-```
-***
 ### `Get-ResultadoLotomania`
 
 A função `Get-ResultadoLotomania` permite que você obtenha resultados de jogos da loteria Lotomania da Caixa. Ela aceita um parâmetro que não é obrigatorio:
@@ -359,74 +412,7 @@ Faixa: 3 acertos + 1 trevo, Ganhadores: 10927, Prêmio: R$ 24.0
 Faixa: 2 acertos + 2 trevos, Ganhadores: 9174, Prêmio: R$ 12.0
 Faixa: 2 acertos + 1 trevo, Ganhadores: 75609, Prêmio: R$ 6.0
 ```
-***
-### `Get-ResultadoMegaSena`
 
-A função `Get-ResultadoMegaSena` permite que você obtenha resultados de jogos da loteria MegaSena da Caixa. Ela aceita um parâmetro que não é obrigatorio:
-- **Parâmetro 1: $concurso - Você escolhe o número do concurso que quer buscar.<br>
-Obs.: Se não colocar nenhum número é buscado o ultimo concurso.
-
-###  Sintaxe
-```powershell
-Get-ResultadoMegaSena $concurso <int>
-
-ps> Get-ResultadoMegaSena
-Concurso: 2809
-Tipo Jogo: MEGA_SENA
-Data de Apuração: 17/12/2024
-Dezenas Sorteadas: 02, 04, 15, 28, 34, 39
-Acumulou: sim
-Rateio de Prêmios:
-Faixa: 6 acertos, Ganhadores: 0, Prêmio: R$ 0.0
-Faixa: 5 acertos, Ganhadores: 39, Prêmio: R$ 60526.4
-Faixa: 4 acertos, Ganhadores: 5000, Prêmio: R$ 674.43
-
-ps> Get-ResultadoMegaSena 2807
-Concurso: 2807
-Tipo Jogo: MEGA_SENA
-Data de Apuração: 12/12/2024
-Dezenas Sorteadas: 08, 25, 49, 52, 55, 56
-Acumulou: sim
-Rateio de Prêmios:
-Faixa: 6 acertos, Ganhadores: 0, Prêmio: R$ 0.0
-Faixa: 5 acertos, Ganhadores: 18, Prêmio: R$ 104535.16
-Faixa: 4 acertos, Ganhadores: 2025, Prêmio: R$ 1327.43
-```
-***
-### `Get-ResultadoQuina`
-
-A função `Get-ResultadoQuina` permite que você obtenha resultados de jogos da loteria Quina da Caixa. Ela aceita um parâmetro que não é obrigatorio:
-- **Parâmetro 1: $concurso - Você escolhe o número do concurso que quer buscar.<br>
-Obs.: Se não colocar nenhum número é buscado o ultimo concurso.
-
-###  Sintaxe
-```powershell
-Get-ResultadoQuina $concurso <int>
-
-ps> Get-ResultadoQuina
-Concurso: 6612
-Tipo Jogo: QUINA
-Data de Apuração: 20/12/2024
-Dezenas Sorteadas: 20, 22, 34, 38, 49
-Acumulou: nao
-Rateio de Prêmios:
-Faixa: 5 acertos, Ganhadores: 1, Prêmio: R$ 24904443.14
-Faixa: 4 acertos, Ganhadores: 122, Prêmio: R$ 8179.88
-Faixa: 3 acertos, Ganhadores: 9724, Prêmio: R$ 97.74
-Faixa: 2 acertos, Ganhadores: 243706, Prêmio: R$ 3.89
-
-ps> Get-ResultadoQuina 6611
-Concurso: 6611
-Tipo Jogo: QUINA
-Data de Apuração: 19/12/2024
-Dezenas Sorteadas: 16, 18, 34, 41, 73
-Acumulou: sim
-Rateio de Prêmios:
-Faixa: 5 acertos, Ganhadores: 0, Prêmio: R$ 0.0
-Faixa: 4 acertos, Ganhadores: 86, Prêmio: R$ 10359.16
-Faixa: 3 acertos, Ganhadores: 7857, Prêmio: R$ 107.98
-Faixa: 2 acertos, Ganhadores: 204283, Prêmio: R$ 4.15
-```
 ***
 ### `Get-ResultadoSuperSete`
 
@@ -470,7 +456,6 @@ Faixa: 3 acertos, Ganhadores: 3415, Prêmio: R$ 5.0
 
 | Tarefa | Descrição | Status |
 |--------|------------|--------|
-| Unificação das funções `Get-MegaSena` e `Get-ResultadoMegaSena` | - Sem parâmetros, retornará o resultado do último concurso. <br> - Com um parâmetro (número do concurso), retornará o resultado do concurso informado. <br> - Com dois parâmetros, retornará os jogos gerados. | A Fazer |
 | Unificação das funções `Get-DiaDeSorte` e `Get-ResultadoDiaDeSorte` | - Sem parâmetros, retornará o resultado do último concurso. <br> - Com um parâmetro (número do concurso), retornará o resultado do concurso informado. <br> - Com dois parâmetros, retornará os jogos gerados. | A Fazer |
 | Unificação das funções `Get-LotoFacil` e `Get-ResultadoLotoFacil` | - Sem parâmetros, retornará o resultado do último concurso. <br> - Com um parâmetro (número do concurso), retornará o resultado do concurso informado. <br> - Com dois parâmetros, retornará os jogos gerados. | A Fazer |
 | Unificação das funções `Get-Quina` e `Get-ResultadoQuina` | - Sem parâmetros, retornará o resultado do último concurso. <br> - Com um parâmetro (número do concurso), retornará o resultado do concurso informado. <br> - Com dois parâmetros, retornará os jogos gerados. | A Fazer |
