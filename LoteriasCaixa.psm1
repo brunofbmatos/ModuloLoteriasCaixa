@@ -341,6 +341,60 @@ function Lotomania {
     }
 }
 
+function Timemania {
+    param (
+        [Parameter(Mandatory=$false)][int]$param = 0
+    )
+
+    try {
+        # Definindo a URL com base no número do sorteio
+        if ($concurso -eq 0) {
+            $url = "https://servicebus2.caixa.gov.br/portaldeloterias/api/timemania/"
+        } else {
+            $url = "https://servicebus2.caixa.gov.br/portaldeloterias/api/timemania/" + $concurso
+        }
+
+        # Fazendo a requisição para a API
+        $response = Invoke-RestMethod -Uri $url -Method Get
+
+        # Verificando se a resposta contém dados
+        if ($response) {
+            # Extraindo os dados desejados
+            $concurso = $response.numero
+            $dataApuracao = $response.dataApuracao
+            $dezenasOrdemSorteio = $response.dezenasSorteadasOrdemSorteio -join ", "
+            $dezenasOrdenadas = $response.listaDezenas -join ", "
+            $timeCoracao = $response.nomeTimeCoracaoMesSorte
+            $acumulou = if ($response.acumulado) {"sim"} else {"nao"}
+            $localSorteio = $response.localSorteio + " (" + $response.nomeMunicipioUFSorteio + ")"
+            $valorProximoConcurso = "{0:C2}" -f $response.valorAcumuladoProximoConcurso
+            $estimativaProximoConcurso = "{0:C2}" -f $response.valorEstimadoProximoConcurso
+
+            # Exibindo as informações
+            Write-Output "Concurso: $concurso"
+            Write-Output "Data de Apuração: $dataApuracao"
+            Write-Output "Dezenas Sorteadas em Ordem: $dezenasOrdemSorteio"
+            Write-Output "Dezenas Sorteadas (Ordenadas): $dezenasOrdenadas"
+            Write-Output "Time do Coração: $timeCoracao"
+            Write-Output "Acumulou: $acumulou"
+            Write-Output "Local do Sorteio: $localSorteio"
+            Write-Output "Valor Acumulado para o Próximo Concurso: $valorProximoConcurso"
+            Write-Output "Estimativa do Próximo Concurso: $estimativaProximoConcurso"
+            Write-Output "Rateio de Prêmios:"
+            $response.listaRateioPremio | ForEach-Object {
+                $descricaoFaixa = $_.descricaoFaixa
+                $numeroGanhadores = $_.numeroDeGanhadores
+                $valorPremio = "{0:C2}" -f $_.valorPremio
+                Write-Output "Faixa: $descricaoFaixa, Ganhadores: $numeroGanhadores, Prêmio: $valorPremio"
+            }
+        } else {
+            Write-Output "Não foi possível obter os dados da API."
+        }
+    } catch {
+        Write-Output "Erro ao acessar a API: $_"
+    }
+}
+
 function DuplaSena {
     param (
         [Parameter(Mandatory=$false)][int]$param1 = 0,
@@ -424,6 +478,119 @@ function DuplaSena {
         } catch {
             Write-Output "Erro ao gerar os jogos: $_"
         }
+    }
+}
+
+function Federal {
+    param (
+        [Parameter(Mandatory=$false)][int]$param = 0
+    )
+
+    try {
+        # Definindo a URL com base no número do sorteio
+        if ($concurso -eq 0) {
+            $url = "https://servicebus2.caixa.gov.br/portaldeloterias/api/federal/"
+        } else {
+            $url = "https://servicebus2.caixa.gov.br/portaldeloterias/api/federal/$concurso"
+        }
+
+        # Fazendo a requisição para a API
+        $response = Invoke-RestMethod -Uri $url -Method Get
+
+        # Verificando se a resposta contém dados
+        if ($response) {
+            # Extraindo os dados desejados
+            $concurso = $response.numero
+            $dataApuracao = $response.dataApuracao
+            $dezenasSorteadas = $response.dezenasSorteadasOrdemSorteio -join ", "
+            $localSorteio = "$($response.localSorteio) ($($response.nomeMunicipioUFSorteio))"
+            $acumulou = if ($response.acumulado) {"não"} else {"sim"}
+
+            # Exibindo informações básicas
+            Write-Output "Concurso: $concurso"
+            Write-Output "Data de Apuração: $dataApuracao"
+            Write-Output "Dezenas Sorteadas: $dezenasSorteadas"
+            Write-Output "Local do Sorteio: $localSorteio"
+            Write-Output "Acumulou: $acumulou"
+
+            # Exibindo detalhes dos ganhadores por cidade
+            if ($response.listaMunicipioUFGanhadores.Count -gt 0) {
+                Write-Output "Ganhadores por Cidade:"
+                $response.listaMunicipioUFGanhadores | ForEach-Object {
+                    Write-Output "Cidade: $($_.municipio), UF: $($_.uf), Loteria: $($_.nomeFatansiaUL), Posição: $($_.posicao)"
+                }
+            } else {
+                Write-Output "Nenhuma informação disponível sobre os ganhadores por cidade."
+            }
+
+            # Exibindo o rateio de prêmios
+            Write-Output "Rateio de Prêmios:"
+            $response.listaRateioPremio | ForEach-Object {
+                $descricaoFaixa = $_.descricaoFaixa
+                $numeroGanhadores = $_.numeroDeGanhadores
+                $valorPremio = "{0:C2}" -f $_.valorPremio
+                Write-Output "Faixa: $descricaoFaixa, Ganhadores: $numeroGanhadores, Prêmio: $valorPremio"
+            }
+        } else {
+            Write-Output "Não foi possível obter os dados da API."
+        }
+    } catch {
+        Write-Output "Erro ao acessar a API: $_"
+    }
+}
+
+function Loteca {
+    param (
+        [Parameter(Mandatory=$false)][int]$concurso = 0
+    )
+
+    try {
+        # Definindo a URL com base no número do sorteio
+        if ($concurso -eq 0) {
+            $url = "https://servicebus2.caixa.gov.br/portaldeloterias/api/loteca/"
+        } else {
+            $url = "https://servicebus2.caixa.gov.br/portaldeloterias/api/loteca/$concurso"
+        }
+
+        # Fazendo a requisição para a API
+        $response = Invoke-RestMethod -Uri $url -Method Get
+
+        # Verificando se a resposta contém dados
+        if ($response) {
+            # Extraindo os dados desejados
+            $concurso = $response.numero
+            $dataApuracao = $response.dataApuracao
+            $acumulou = if ($response.acumulado) {"sim"} else {"não"}
+            $valorProximoConcurso = "{0:C2}" -f $response.valorAcumuladoProximoConcurso
+            $estimativaProximoConcurso = "{0:C2}" -f $response.valorEstimadoProximoConcurso
+
+            # Exibindo informações básicas
+            Write-Output "Concurso: $concurso"
+            Write-Output "Data de Apuração: $dataApuracao"
+            Write-Output "Acumulou: $acumulou"
+            Write-Output "Valor Acumulado para o Próximo Concurso: $valorProximoConcurso"
+            Write-Output "Estimativa do Próximo Concurso: $estimativaProximoConcurso"
+
+            # Exibindo o rateio de prêmios
+            Write-Output "Rateio de Prêmios:"
+            $response.listaRateioPremio | ForEach-Object {
+                $descricaoFaixa = $_.descricaoFaixa
+                $numeroGanhadores = $_.numeroDeGanhadores
+                $valorPremio = "{0:C2}" -f $_.valorPremio
+                Write-Output "Faixa: $descricaoFaixa, Ganhadores: $numeroGanhadores, Prêmio: $valorPremio"
+            }
+
+            # Exibindo os resultados dos jogos
+            Write-Output "Resultados dos Jogos:"
+            $response.listaResultadoEquipeEsportiva | ForEach-Object {
+                Write-Output "$($_.diaSemana) - $($_.dtJogo): $($_.nomeEquipeUm) $($_.nuGolEquipeUm) x $($_.nuGolEquipeDois) $($_.nomeEquipeDois) ($($_.nomeCampeonato))"
+            }
+
+        } else {
+            Write-Output "Não foi possível obter os dados da API."
+        }
+    } catch {
+        Write-Output "Erro ao acessar a API: $_"
     }
 }
 
